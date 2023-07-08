@@ -14,8 +14,7 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-import AuthBg from "../assets/images/authBg.jpg";
-
+import AuthBg from "../../assets/images/authBg.jpg";
 export default function RegistrationScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [loginFocused, setLoginFocused] = useState(false);

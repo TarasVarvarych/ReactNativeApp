@@ -12,7 +12,7 @@ import {
   Keyboard,
 } from "react-native";
 
-import AuthBg from "../assets/images/authBg.jpg";
+import AuthBg from "../../assets/images/authBg.jpg";
 
 export default function LoginScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
