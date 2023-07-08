@@ -10,6 +10,7 @@ import {
   Platform,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Button,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -17,10 +18,27 @@ import AuthBg from "../assets/images/authBg.jpg";
 
 export default function RegistrationScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+  const [loginFocused, setLoginFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const hideKeyboard = () => {
     setIsKeyboardShown(false);
+    setEmailFocused(false);
+    setLoginFocused(false);
+    setPasswordFocused(false);
     Keyboard.dismiss();
+  };
+
+  const onRegistration = () => {
+    console.log(`login: ${login}, email: ${email}, password: ${password}`);
+    setLogin("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -48,20 +66,32 @@ export default function RegistrationScreen() {
                 <TextInput
                   onFocus={() => {
                     setIsKeyboardShown(true);
+                    setLoginFocused(true);
                   }}
                   onBlur={hideKeyboard}
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: loginFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Логін"
+                  onChangeText={setLogin}
+                  value={login}
                 ></TextInput>
               </View>
               <View style={{ marginBottom: 16 }}>
                 <TextInput
                   onFocus={() => {
                     setIsKeyboardShown(true);
+                    setEmailFocused(true);
                   }}
                   onBlur={hideKeyboard}
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: emailFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Адреса електронної пошти"
+                  onChangeText={setEmail}
+                  value={email}
                 ></TextInput>
               </View>
 
@@ -69,11 +99,17 @@ export default function RegistrationScreen() {
                 <TextInput
                   onFocus={() => {
                     setIsKeyboardShown(true);
+                    setPasswordFocused(true);
                   }}
                   onBlur={hideKeyboard}
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: passwordFocused ? "#FF6C00" : "#E8E8E8",
+                  }}
                   placeholder="Пароль"
                   secureTextEntry={true}
+                  onChangeText={setPassword}
+                  value={password}
                 ></TextInput>
                 <TouchableOpacity style={styles.showPassBtn}>
                   <Text
@@ -87,13 +123,7 @@ export default function RegistrationScreen() {
                   </Text>
                 </TouchableOpacity>
               </View>
-
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => {
-                  setIsKeyboardShown(false);
-                }}
-              >
+              <TouchableOpacity style={styles.btn} onPress={onRegistration}>
                 <Text style={styles.btnText}>Зареєструватись</Text>
               </TouchableOpacity>
               <TouchableOpacity>

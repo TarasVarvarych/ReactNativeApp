@@ -19,13 +19,20 @@ export default function LoginScreen() {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const hideKeyboard = () => {
     setIsKeyboardShown(false);
     setEmailFocused(false);
     setPasswordFocused(false);
     Keyboard.dismiss();
   };
-
+  const onLogin = () => {
+    console.log(` email: ${email}, password: ${password}`);
+    setEmail("");
+    setPassword("");
+  };
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View>
@@ -53,6 +60,8 @@ export default function LoginScreen() {
                     borderColor: emailFocused ? "#FF6C00" : "#E8E8E8",
                   }}
                   placeholder="Адреса електронної пошти"
+                  onChangeText={setEmail}
+                  value={email}
                 ></TextInput>
               </View>
               <View style={{ position: "relative", marginBottom: 43 }}>
@@ -68,6 +77,8 @@ export default function LoginScreen() {
                   }}
                   placeholder="Пароль"
                   secureTextEntry={true}
+                  onChangeText={setPassword}
+                  value={password}
                 ></TextInput>
                 <TouchableOpacity style={styles.showPassBtn}>
                   <Text
@@ -82,7 +93,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity style={styles.btn}>
+              <TouchableOpacity style={styles.btn} onPress={onLogin}>
                 <Text style={styles.btnText}>Увійти</Text>
               </TouchableOpacity>
               <View style={styles.registrationTextContainer}>
