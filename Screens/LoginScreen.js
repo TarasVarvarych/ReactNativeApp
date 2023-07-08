@@ -131,12 +131,9 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "flex-end",
-    // resizeMode: "contain",
-    // alignItems: "center",
   },
   form: {
     position: "relative",
-    // width: 375,
     height: 489,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,

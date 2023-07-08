@@ -149,9 +149,6 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "flex-end",
-    // resizeMode: "cover",
-    // alignItems: "center",
-    // width: 375,
   },
   form: {
     position: "relative",
