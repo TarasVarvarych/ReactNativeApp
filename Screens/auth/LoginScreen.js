@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -35,20 +35,27 @@ export default function LoginScreen() {
       setIsPasswordHidden(!isPasswordHidden);
     }
   };
+  useEffect(() => {
+    if (!isKeyboardShown) {
+      Keyboard.dismiss();
+    }
+  }, [isKeyboardShown]);
 
-  const hideKeyboard = () => {
-    setIsKeyboardShown(false);
-    setEmailFocused(false);
-    setPasswordFocused(false);
-    Keyboard.dismiss();
-  };
+  // const hideKeyboard = () => {
+  //   setIsKeyboardShown(false);
+  //   Keyboard.dismiss();
+  // };
   const onLogin = () => {
     console.log(` email: ${email}, password: ${password}`);
     setEmail("");
     setPassword("");
   };
   return (
-    <TouchableWithoutFeedback onPress={hideKeyboard}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setIsKeyboardShown(false);
+      }}
+    >
       <View>
         <ImageBackground source={AuthBg} style={styles.image}>
           <KeyboardAvoidingView
@@ -68,7 +75,9 @@ export default function LoginScreen() {
                     setIsKeyboardShown(true);
                     setEmailFocused(true);
                   }}
-                  onBlur={hideKeyboard}
+                  onBlur={() => {
+                    setEmailFocused(false);
+                  }}
                   style={{
                     ...styles.input,
                     borderColor: emailFocused ? "#FF6C00" : "#E8E8E8",
@@ -84,7 +93,9 @@ export default function LoginScreen() {
                     setIsKeyboardShown(true);
                     setPasswordFocused(true);
                   }}
-                  onBlur={hideKeyboard}
+                  onBlur={() => {
+                    setPasswordFocused(false);
+                  }}
                   style={{
                     ...styles.input,
                     borderColor: passwordFocused ? "#FF6C00" : "#E8E8E8",
@@ -175,7 +186,7 @@ const styles = StyleSheet.create({
     marginBottom: 33,
   },
   input: {
-    width: 343,
+    minWidth: "90%",
     height: 50,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,

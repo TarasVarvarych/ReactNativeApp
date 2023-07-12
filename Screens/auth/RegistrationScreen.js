@@ -31,19 +31,22 @@ export default function RegistrationScreen() {
     }
   }, [password]);
 
+  useEffect(() => {
+    if (!isKeyboardShown) {
+      Keyboard.dismiss();
+    }
+  }, [isKeyboardShown]);
+
   const togglePasswordShow = () => {
     if (password !== "") {
       setIsPasswordHidden(!isPasswordHidden);
     }
   };
 
-  const hideKeyboard = () => {
-    setIsKeyboardShown(false);
-    setEmailFocused(false);
-    setLoginFocused(false);
-    setPasswordFocused(false);
-    Keyboard.dismiss();
-  };
+  // const hideKeyboard = () => {
+  //   setIsKeyboardShown(false);
+  //   Keyboard.dismiss();
+  // };
 
   const onRegistration = () => {
     console.log(`login: ${login}, email: ${email}, password: ${password}`);
@@ -53,7 +56,11 @@ export default function RegistrationScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={hideKeyboard}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setIsKeyboardShown(false);
+      }}
+    >
       <View>
         <ImageBackground source={AuthBg} style={styles.image}>
           <KeyboardAvoidingView
@@ -79,7 +86,9 @@ export default function RegistrationScreen() {
                     setIsKeyboardShown(true);
                     setLoginFocused(true);
                   }}
-                  onBlur={hideKeyboard}
+                  onBlur={() => {
+                    setLoginFocused(false);
+                  }}
                   style={{
                     ...styles.input,
                     borderColor: loginFocused ? "#FF6C00" : "#E8E8E8",
@@ -95,7 +104,9 @@ export default function RegistrationScreen() {
                     setIsKeyboardShown(true);
                     setEmailFocused(true);
                   }}
-                  onBlur={hideKeyboard}
+                  onBlur={() => {
+                    setEmailFocused(false);
+                  }}
                   style={{
                     ...styles.input,
                     borderColor: emailFocused ? "#FF6C00" : "#E8E8E8",
@@ -112,7 +123,9 @@ export default function RegistrationScreen() {
                     setIsKeyboardShown(true);
                     setPasswordFocused(true);
                   }}
-                  onBlur={hideKeyboard}
+                  onBlur={() => {
+                    setPasswordFocused(false);
+                  }}
                   style={{
                     ...styles.input,
                     borderColor: passwordFocused ? "#FF6C00" : "#E8E8E8",
@@ -190,7 +203,8 @@ const styles = StyleSheet.create({
     marginBottom: 33,
   },
   input: {
-    width: 343,
+    // width: 343,
+    minWidth: "90%",
     height: 50,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
