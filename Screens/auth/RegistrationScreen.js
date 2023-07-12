@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,13 +10,13 @@ import {
   Platform,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Button,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 import AuthBg from "../../assets/images/authBg.jpg";
 export default function RegistrationScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+  const [isPasswordHidden, setIsPasswordHidden] = useState(true);
   const [loginFocused, setLoginFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -24,6 +24,18 @@ export default function RegistrationScreen() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (password === "") {
+      setIsPasswordHidden(true);
+    }
+  }, [password]);
+
+  const togglePasswordShow = () => {
+    if (password !== "") {
+      setIsPasswordHidden(!isPasswordHidden);
+    }
+  };
 
   const hideKeyboard = () => {
     setIsKeyboardShown(false);
@@ -106,11 +118,14 @@ export default function RegistrationScreen() {
                     borderColor: passwordFocused ? "#FF6C00" : "#E8E8E8",
                   }}
                   placeholder="Пароль"
-                  secureTextEntry={true}
+                  secureTextEntry={isPasswordHidden}
                   onChangeText={setPassword}
                   value={password}
                 ></TextInput>
-                <TouchableOpacity style={styles.showPassBtn}>
+                <TouchableOpacity
+                  style={styles.showPassBtn}
+                  onPress={togglePasswordShow}
+                >
                   <Text
                     style={{
                       fontFamily: "Roboto",
@@ -118,7 +133,7 @@ export default function RegistrationScreen() {
                       color: "#1B4371",
                     }}
                   >
-                    Показати
+                    {isPasswordHidden ? "Показати" : "Приховати"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -148,11 +163,16 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "flex-end",
+    resizeMode: "cover",
+    alignItems: "center",
+    minWidth: "100%",
+    minHeight: "100%",
   },
   form: {
     position: "relative",
-    width: 375,
-    height: 549,
+    minWidth: "100%",
+    paddingTop: 92,
+    paddingBottom: 78,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: "#fff",
@@ -166,7 +186,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "RobotoMedium",
     fontSize: 30,
-    fontWeight: 500,
     letterSpacing: 0.3,
     marginBottom: 33,
   },
@@ -203,7 +222,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
     top: -60,
-    left: 128,
+    alignSelf: "center",
   },
   showPassBtn: {
     position: "absolute",

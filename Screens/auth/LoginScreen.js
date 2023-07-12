@@ -16,11 +16,25 @@ import AuthBg from "../../assets/images/authBg.jpg";
 
 export default function LoginScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+  const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (password === "") {
+      setIsPasswordHidden(true);
+    }
+  }, [password]);
+
+  const togglePasswordShow = () => {
+    if (password !== "") {
+      setIsPasswordHidden(!isPasswordHidden);
+    }
+  };
 
   const hideKeyboard = () => {
     setIsKeyboardShown(false);
@@ -76,11 +90,14 @@ export default function LoginScreen() {
                     borderColor: passwordFocused ? "#FF6C00" : "#E8E8E8",
                   }}
                   placeholder="Пароль"
-                  secureTextEntry={true}
+                  secureTextEntry={isPasswordHidden}
                   onChangeText={setPassword}
                   value={password}
                 ></TextInput>
-                <TouchableOpacity style={styles.showPassBtn}>
+                <TouchableOpacity
+                  style={styles.showPassBtn}
+                  onPress={togglePasswordShow}
+                >
                   <Text
                     style={{
                       fontFamily: "Roboto",
@@ -88,7 +105,7 @@ export default function LoginScreen() {
                       color: "#1B4371",
                     }}
                   >
-                    Показати
+                    {isPasswordHidden ? "Показати" : "Приховати"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -131,10 +148,14 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: "flex-end",
+    resizeMode: "cover",
+    alignItems: "center",
+    minWidth: "100%",
+    minHeight: "100%",
   },
   form: {
     position: "relative",
-    height: 489,
+    minWidth: "100%",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: "#fff",
@@ -150,7 +171,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "RobotoMedium",
     fontSize: 30,
-    fontWeight: 500,
     letterSpacing: 0.3,
     marginBottom: 33,
   },
@@ -180,25 +200,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Roboto",
   },
-  addPhoto: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    backgroundColor: "#F6F6F6",
-    top: -60,
-    left: 128,
-  },
+
   showPassBtn: {
     position: "absolute",
     right: 16,
     top: 16,
   },
-  addPicBtn: {
-    position: "absolute",
-    right: -12,
-    bottom: 12,
-  },
+
   registrationTextContainer: {
     display: "flex",
     flexDirection: "row",
