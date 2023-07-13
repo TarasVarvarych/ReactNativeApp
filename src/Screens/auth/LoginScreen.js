@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import AuthBg from "../../assets/images/authBg.jpg";
 
@@ -23,6 +24,8 @@ export default function LoginScreen() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (password === "") {
@@ -41,14 +44,11 @@ export default function LoginScreen() {
     }
   }, [isKeyboardShown]);
 
-  // const hideKeyboard = () => {
-  //   setIsKeyboardShown(false);
-  //   Keyboard.dismiss();
-  // };
   const onLogin = () => {
     console.log(` email: ${email}, password: ${password}`);
     setEmail("");
     setPassword("");
+    navigation.navigate("Home");
   };
   return (
     <TouchableWithoutFeedback
@@ -56,7 +56,7 @@ export default function LoginScreen() {
         setIsKeyboardShown(false);
       }}
     >
-      <View>
+      <View style={styles.container}>
         <ImageBackground source={AuthBg} style={styles.image}>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -64,7 +64,8 @@ export default function LoginScreen() {
             <View
               style={{
                 ...styles.form,
-                marginBottom: isKeyboardShown ? -250 : 0,
+                // marginBottom: isKeyboardShown ? -250 : 0,
+                paddingBottom: isKeyboardShown ? 16 : 144,
               }}
             >
               <Text style={styles.formTitle}>Увійти</Text>
@@ -134,7 +135,9 @@ export default function LoginScreen() {
                 >
                   Немає акаунту?
                 </Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Registration")}
+                >
                   <Text
                     style={{
                       fontFamily: "Roboto",
@@ -156,6 +159,12 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   image: {
     flex: 1,
     justifyContent: "flex-end",
@@ -165,16 +174,15 @@ const styles = StyleSheet.create({
     minHeight: "100%",
   },
   form: {
-    position: "relative",
     minWidth: "100%",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: "#fff",
-    display: "flex",
-    flexDirection: "column",
+    // display: "flex",
+    // flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    paddingBottom: 144,
+    // justifyContent: "center",
+    // paddingBottom: 144,
     paddingTop: 32,
   },
   formTitle: {

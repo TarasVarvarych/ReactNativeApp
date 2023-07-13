@@ -11,9 +11,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import { AntDesign } from "@expo/vector-icons";
 
 import AuthBg from "../../assets/images/authBg.jpg";
+
 export default function RegistrationScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
@@ -24,6 +27,7 @@ export default function RegistrationScreen() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (password === "") {
@@ -53,6 +57,7 @@ export default function RegistrationScreen() {
     setLogin("");
     setEmail("");
     setPassword("");
+    navigation.navigate("Home");
   };
 
   return (
@@ -61,15 +66,17 @@ export default function RegistrationScreen() {
         setIsKeyboardShown(false);
       }}
     >
-      <View>
+      <View style={styles.container}>
         <ImageBackground source={AuthBg} style={styles.image}>
           <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            behavior={Platform.OS == "ios" ? "padding" : "margin"}
           >
             <View
               style={{
                 ...styles.form,
-                marginBottom: isKeyboardShown ? -190 : 0,
+                // marginBottom: isKeyboardShown ? -190 : 0,
+                paddingBottom: isKeyboardShown ? 16 : 78,
+                // paddingBottom: isKeyboardShown ? 16 : 24,
               }}
             >
               <View style={styles.addPhoto}>
@@ -79,7 +86,9 @@ export default function RegistrationScreen() {
                   </Text>
                 </TouchableOpacity>
               </View>
+
               <Text style={styles.formTitle}>Реєстрація</Text>
+
               <View style={{ marginBottom: 16 }}>
                 <TextInput
                   onFocus={() => {
@@ -150,10 +159,11 @@ export default function RegistrationScreen() {
                   </Text>
                 </TouchableOpacity>
               </View>
+
               <TouchableOpacity style={styles.btn} onPress={onRegistration}>
                 <Text style={styles.btnText}>Зареєструватись</Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                 <Text
                   style={{
                     fontFamily: "Roboto",
@@ -173,6 +183,9 @@ export default function RegistrationScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   image: {
     flex: 1,
     justifyContent: "flex-end",
@@ -185,14 +198,14 @@ const styles = StyleSheet.create({
     position: "relative",
     minWidth: "100%",
     paddingTop: 92,
-    paddingBottom: 78,
+    // paddingBottom: 78,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     backgroundColor: "#fff",
-    display: "flex",
-    flexDirection: "column",
+    // display: "flex",
+    // flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   formTitle: {
     color: "#212121",
@@ -203,7 +216,6 @@ const styles = StyleSheet.create({
     marginBottom: 33,
   },
   input: {
-    // width: 343,
     minWidth: "90%",
     height: 50,
     backgroundColor: "#F6F6F6",
