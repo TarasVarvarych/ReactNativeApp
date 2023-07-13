@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 // import { useNavigation } from "@react-navigation/native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import ProfilePic from "../../assets/images/profilePic.jpg";
 
@@ -13,17 +13,13 @@ export default function PostsScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Публікації</Text>
         <TouchableOpacity
-        // onPress={() => {
-        //   navigation.navigate("Login");
-        // }}
+          // onPress={() => {
+          //   navigation.navigate("Login");
+          // }}
+          style={{ marginLeft: "auto" }}
         >
           <Text>
-            <MaterialIcons
-              style={{ marginLeft: "auto" }}
-              name="logout"
-              size={24}
-              color="#BDBDBD"
-            />
+            <Feather name="log-out" size={24} color="#BDBDBD" />
           </Text>
         </TouchableOpacity>
       </View>
@@ -86,7 +82,7 @@ const styles = StyleSheet.create({
   },
   profileEmail: {
     color: "#212121e0",
-    fonrFamily: "Roboto",
+    fontFamily: "Roboto",
     fontSize: 11,
   },
 });

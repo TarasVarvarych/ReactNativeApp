@@ -10,7 +10,7 @@ import PostsScreen from "./src/Screens/main/PostsScreen";
 import { useFonts } from "expo-font";
 import { useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
-import Home from "./src/Screens/Home";
+import Home from "./src/Screens/main/Home";
 import BottomNavigation from "./src/Screens/components/BottomNavigation";
 
 // SplashScreen.preventAutoHideAsync();
