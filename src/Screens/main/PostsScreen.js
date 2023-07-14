@@ -1,14 +1,30 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  FlatList,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 import ProfilePic from "../../assets/images/profilePic.jpg";
 import LoginScreen from "../auth/LoginScreen";
 
 export default function PostsScreen() {
+  const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
+  const { params } = useRoute();
 
+  useEffect(() => {
+    if (params) {
+      setPosts((pervState) => [...pervState, params]);
+    }
+  }, [params]);
+
+  console.log(posts);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -32,6 +48,51 @@ export default function PostsScreen() {
             <Text style={styles.profileEmail}>email@example.com</Text>
           </View>
         </View>
+        <FlatList
+          data={posts}
+          keyExtractor={(item, indx) => {
+            indx.toString();
+          }}
+          renderItem={({ item }) => (
+            <View style={styles.postWrapper}>
+              <Image source={{ uri: item.picture }} style={styles.postPic} />
+              <Text style={{ marginBottom: 8 }}>{item.title}</Text>
+              <View
+                style={{
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                }}
+              >
+                <TouchableOpacity
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                >
+                  <Feather name="message-circle" size={24} color="#BDBDBD" />
+                  <Text
+                    style={{ fontSize: 16, color: "#BDBDBD", marginLeft: 6 }}
+                  >
+                    0
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                >
+                  <Feather name="map-pin" size={24} color="#BDBDBD" />
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#212121",
+                      marginLeft: 6,
+                      textDecorationLine: "underline",
+                    }}
+                  >
+                    {item.location}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
       </View>
     </View>
   );
@@ -41,8 +102,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: "flex-start",
-    // justifyContent: "center",
   },
   header: {
     flexDirection: "row",
@@ -64,13 +123,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   body: {
-    // minHeight: 641,
     width: "100%",
     paddingTop: 32,
     paddingHorizontal: 16,
   },
   profile: {
     flexDirection: "row",
+    marginBottom: 32,
   },
   profilePic: {
     marginRight: 8,
@@ -82,7 +141,22 @@ const styles = StyleSheet.create({
   },
   profileEmail: {
     color: "#212121e0",
-    fontFamily: "Roboto",
+    fontFamily: "RobotoRegular",
     fontSize: 11,
+  },
+  postPic: {
+    width: 343,
+    height: 240,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  postWrapper: {
+    width: 343,
+    marginBottom: 34,
+  },
+  postTitle: {
+    marginBottom: 8,
+    fontFamily: "RobotoMedium",
+    fontSize: 16,
   },
 });

@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 
 export default function CreatePostsScreen() {
   const navigation = useNavigation();
-  const [titile, setTitle] = useState("");
+  const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
 
@@ -48,8 +48,7 @@ export default function CreatePostsScreen() {
   };
 
   const sendPic = () => {
-    console.log(navigation);
-    navigation.navigate("Posts");
+    navigation.navigate("Posts", { picture, title, location });
   };
 
   return (
@@ -95,7 +94,7 @@ export default function CreatePostsScreen() {
           >
             <TextInput
               onChangeText={setTitle}
-              value={titile}
+              value={title}
               style={styles.uploadName}
               placeholder="Назва..."
               onFocus={() => {
