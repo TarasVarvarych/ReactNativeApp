@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
     paddingVertical: 22,
-    height: 300,
     alignItems: "center",
     justifyContent: "flex-start",
   },
