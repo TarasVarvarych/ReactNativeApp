@@ -36,16 +36,21 @@ export default function CreatePostsScreen() {
   //   })();
   // }, []);
 
-  const takePic = async () => {
-    const pic = await cameraRef.takePictureAsync();
-    setPicture(pic.uri);
-  };
-
   useEffect(() => {
     if (!isKeyboardShown) {
       Keyboard.dismiss();
     }
   }, [isKeyboardShown]);
+
+  const takePic = async () => {
+    const pic = await cameraRef.takePictureAsync();
+    setPicture(pic.uri);
+  };
+
+  const sendPic = () => {
+    console.log(navigation);
+    navigation.navigate("Posts");
+  };
 
   return (
     <TouchableWithoutFeedback
@@ -116,7 +121,7 @@ export default function CreatePostsScreen() {
             </View>
           </KeyboardAvoidingView>
 
-          <TouchableOpacity style={styles.publicateBtn}>
+          <TouchableOpacity style={styles.publicateBtn} onPress={sendPic}>
             <Text style={styles.publicateBtnText}>Опублікувати</Text>
           </TouchableOpacity>
         </View>
@@ -232,6 +237,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
+    borderRadius: 8,
     // width: "100%",
     // borderWidth: 2,
     // borderColor: "#fff",
