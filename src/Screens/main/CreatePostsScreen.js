@@ -11,8 +11,9 @@ import {
 } from "react-native";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-
-import Camera from "../../assets/images/cam.png";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import CameraIcon from "../../assets/images/cam.png";
 import { useEffect, useState } from "react";
 
 export default function CreatePostsScreen() {
@@ -20,6 +21,25 @@ export default function CreatePostsScreen() {
   const [titile, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+
+  // const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [picture, setPicture] = useState(null);
+  // const [type, setType] = useState(Camera.Constants.Type.back);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await Camera.requestPermissionsAsync();
+  //     await MediaLibrary.requestPermissionsAsync();
+
+  //     setHasPermission(status === "granted");
+  //   })();
+  // }, []);
+
+  const takePic = async () => {
+    const pic = await cameraRef.takePictureAsync();
+    setPicture(pic.uri);
+  };
 
   useEffect(() => {
     if (!isKeyboardShown) {
@@ -50,11 +70,19 @@ export default function CreatePostsScreen() {
         <View
           style={{ ...styles.body, paddingBottom: isKeyboardShown ? 16 : 0 }}
         >
-          <View style={styles.uploadPicBg}>
-            <TouchableOpacity>
-              <Image style={styles.camera} source={Camera} />
+          <Camera style={styles.uploadPicBg} ref={setCameraRef}>
+            {picture && (
+              <View style={styles.picContainer}>
+                <Image
+                  source={{ uri: picture }}
+                  style={{ width: 100, height: 100 }}
+                />
+              </View>
+            )}
+            <TouchableOpacity onPress={takePic}>
+              <Image style={styles.camera} source={CameraIcon} />
             </TouchableOpacity>
-          </View>
+          </Camera>
           <Text style={styles.uploadText}>Завантажте фото</Text>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -108,16 +136,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingBottom: 10,
+    paddingVertical: 10,
     width: "100%",
-    maxHeight: 88,
+    minHeight: 88,
     borderBottomWidth: 0.5,
     borderBottomColor: "#0000004d",
   },
@@ -200,5 +227,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderRadius: 20,
     paddingVertical: 8,
+  },
+  picContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    // width: "100%",
+    // borderWidth: 2,
+    // borderColor: "#fff",
   },
 });

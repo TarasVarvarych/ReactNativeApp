@@ -1,15 +1,73 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import PostsScreen from "../main/PostsScreen";
+import CreatePostsScreen from "../main/CreatePostsScreen";
+import ProfileScreen from "../main/ProfileScreen";
+import { Ionicons, Feather } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
 
-import { MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
-import PostsScreen from "./PostsScreen";
-import CreatePostsScreen from "./CreatePostsScreen";
-import BottomNavigation from "../components/BottomNavigation";
+const Tab = createBottomTabNavigator();
 
 export default function Home() {
   return (
-    <>
-      <BottomNavigation />
-    </>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+        tabBarStyle: {
+          paddingTop: 9,
+          paddingBottom: 34,
+          paddingHorizontal: 90,
+          borderTopColor: "#212121CC",
+          height: 83,
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Posts"
+        component={PostsScreen}
+        options={{
+          tabBarIcon: () => (
+            <Ionicons name="grid-outline" size={24} color="#212121CC" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Create posts"
+        component={CreatePostsScreen}
+        options={{
+          tabBarIcon: () => (
+            <View style={styles.addPostBtn}>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 24,
+                }}
+              >
+                +
+              </Text>
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: () => <Feather name="user" size={24} color="#212121CC" />,
+        }}
+      />
+    </Tab.Navigator>
   );
 }
+const styles = StyleSheet.create({
+  addPostBtn: {
+    width: 70,
+    height: 40,
+    backgroundColor: "#FF6C00",
+    borderRadius: 20,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

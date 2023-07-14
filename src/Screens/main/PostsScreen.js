@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-// import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 import ProfilePic from "../../assets/images/profilePic.jpg";
+import LoginScreen from "../auth/LoginScreen";
 
 export default function PostsScreen() {
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Публікації</Text>
         <TouchableOpacity
-          // onPress={() => {
-          //   navigation.navigate("Login");
-          // }}
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
           style={{ marginLeft: "auto" }}
         >
           <Text>
@@ -23,7 +24,6 @@ export default function PostsScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.body}>
         <View style={styles.profile}>
           <Image source={ProfilePic} style={styles.profilePic} />
@@ -41,17 +41,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "flex-start",
+    // justifyContent: "center",
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingBottom: 10,
+    paddingVertical: 10,
     width: "100%",
-    maxHeight: 88,
+    minHeight: 88,
     borderBottomWidth: 0.5,
     borderBottomColor: "#0000004d",
   },
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   body: {
-    minHeight: 641,
+    // minHeight: 641,
     width: "100%",
     paddingTop: 32,
     paddingHorizontal: 16,
