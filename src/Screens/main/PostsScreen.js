@@ -24,7 +24,6 @@ export default function PostsScreen() {
     }
   }, [params]);
 
-  console.log(posts);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -56,7 +55,16 @@ export default function PostsScreen() {
           renderItem={({ item }) => (
             <View style={styles.postWrapper}>
               <Image source={{ uri: item.picture }} style={styles.postPic} />
-              <Text style={{ marginBottom: 8 }}>{item.title}</Text>
+              <Text
+                style={{
+                  marginBottom: 8,
+                  fontFamily: "RobotoMedium",
+                  fontSize: 16,
+                  color: "#212121",
+                }}
+              >
+                {item.title}
+              </Text>
               <View
                 style={{
                   justifyContent: "space-between",
