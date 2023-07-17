@@ -15,16 +15,19 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import CameraIcon from "../../assets/images/cam.png";
 import { useEffect, useState } from "react";
+import * as Location from "expo-location";
 
 export default function CreatePostsScreen() {
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
-  const [location, setLocation] = useState("");
+  const [locationName, setLocationName] = useState("");
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
 
   // const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [picture, setPicture] = useState(null);
+  const [location, setLocation] = useState(null);
+
   // const [type, setType] = useState(Camera.Constants.Type.back);
 
   // useEffect(() => {
@@ -37,6 +40,19 @@ export default function CreatePostsScreen() {
   // }, []);
 
   useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  useEffect(() => {
     if (!isKeyboardShown) {
       Keyboard.dismiss();
     }
@@ -44,11 +60,25 @@ export default function CreatePostsScreen() {
 
   const takePic = async () => {
     const pic = await cameraRef.takePictureAsync();
+    const picLocation = await Location.getCurrentPositionAsync();
     setPicture(pic.uri);
+    setLocation(picLocation);
+    console.log(location);
   };
 
   const sendPic = () => {
-    navigation.navigate("Posts", { picture, title, location });
+    navigation.navigate("DefaultScreen", {
+      picture,
+      title,
+      locationName,
+      location,
+    });
+  };
+
+  const deletePost = () => {
+    setTitle("");
+    setLocationName("");
+    setPicture(null);
   };
 
   return (
@@ -61,7 +91,7 @@ export default function CreatePostsScreen() {
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("PostsScreen");
+              navigation.navigate("DefaultScreen");
             }}
           >
             <Text>
@@ -103,8 +133,8 @@ export default function CreatePostsScreen() {
             />
             <View style={styles.locationWrapper}>
               <TextInput
-                onChangeText={setLocation}
-                value={location}
+                onChangeText={setLocationName}
+                value={locationName}
                 style={styles.uploadLocation}
                 placeholder="Місцевість..."
                 onFocus={() => {
@@ -125,7 +155,7 @@ export default function CreatePostsScreen() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.removePost}>
+        <TouchableOpacity style={styles.removePost} onPress={deletePost}>
           <Text style={{ textAlign: "center" }}>
             <Feather name="trash-2" size={24} color="#BDBDBD" />
           </Text>
@@ -140,6 +170,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
+    justifyContent: "space-between",
+    paddingBottom: 34,
   },
   header: {
     flexDirection: "row",

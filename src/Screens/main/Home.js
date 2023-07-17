@@ -36,6 +36,8 @@ export default function Home() {
         name="Create posts"
         component={CreatePostsScreen}
         options={{
+          tabBarStyle: { display: "none" },
+
           tabBarIcon: () => (
             <View style={styles.addPostBtn}>
               <Text

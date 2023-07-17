@@ -1,170 +1,28 @@
-import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  FlatList,
-} from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Feather } from "@expo/vector-icons";
+import { createStackNavigator } from "@react-navigation/stack";
+import DefaultPostsScreen from "../nestedScreens/DefaultPostsScreen";
+import CommentsScreen from "../nestedScreens/CommentsScreen";
+import MapScreen from "../nestedScreens/MapScreen";
 
-import ProfilePic from "../../assets/images/profilePic.jpg";
-import LoginScreen from "../auth/LoginScreen";
+const NastedScreen = createStackNavigator();
 
 export default function PostsScreen() {
-  const [posts, setPosts] = useState([]);
-  const navigation = useNavigation();
-  const { params } = useRoute();
-
-  useEffect(() => {
-    if (params) {
-      setPosts((pervState) => [...pervState, params]);
-    }
-  }, [params]);
-
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Публікації</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
-          style={{ marginLeft: "auto" }}
-        >
-          <Text>
-            <Feather name="log-out" size={24} color="#BDBDBD" />
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.body}>
-        <View style={styles.profile}>
-          <Image source={ProfilePic} style={styles.profilePic} />
-          <View>
-            <Text style={styles.profileName}>Natali Romanova</Text>
-            <Text style={styles.profileEmail}>email@example.com</Text>
-          </View>
-        </View>
-        <FlatList
-          data={posts}
-          keyExtractor={(item, indx) => {
-            indx.toString();
-          }}
-          renderItem={({ item }) => (
-            <View style={styles.postWrapper}>
-              <Image source={{ uri: item.picture }} style={styles.postPic} />
-              <Text
-                style={{
-                  marginBottom: 8,
-                  fontFamily: "RobotoMedium",
-                  fontSize: 16,
-                  color: "#212121",
-                }}
-              >
-                {item.title}
-              </Text>
-              <View
-                style={{
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                }}
-              >
-                <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                >
-                  <Feather name="message-circle" size={24} color="#BDBDBD" />
-                  <Text
-                    style={{ fontSize: 16, color: "#BDBDBD", marginLeft: 6 }}
-                  >
-                    0
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                >
-                  <Feather name="map-pin" size={24} color="#BDBDBD" />
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#212121",
-                      marginLeft: 6,
-                      textDecorationLine: "underline",
-                    }}
-                  >
-                    {item.location}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-      </View>
-    </View>
+    <NastedScreen.Navigator>
+      <NastedScreen.Screen
+        name="DefaultScreen"
+        component={DefaultPostsScreen}
+        options={{ headerShown: false }}
+      />
+      <NastedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{ headerShown: false }}
+      />
+      <NastedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        // options={{ headerShown: false }}
+      />
+    </NastedScreen.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    width: "100%",
-    minHeight: 88,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#0000004d",
-  },
-  title: {
-    flex: 1,
-    fontSize: 17,
-    fontFamily: "RobotoMedium",
-    lineHeight: 22,
-    letterSpacing: -0.408,
-    textAlign: "center",
-  },
-  body: {
-    width: "100%",
-    paddingTop: 32,
-    paddingHorizontal: 16,
-  },
-  profile: {
-    flexDirection: "row",
-    marginBottom: 32,
-  },
-  profilePic: {
-    marginRight: 8,
-  },
-  profileName: {
-    color: "#212121",
-    fontFamily: "RobotoBold",
-    fontSize: 13,
-  },
-  profileEmail: {
-    color: "#212121e0",
-    fontFamily: "RobotoRegular",
-    fontSize: 11,
-  },
-  postPic: {
-    width: 343,
-    height: 240,
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  postWrapper: {
-    width: 343,
-    marginBottom: 34,
-  },
-  postTitle: {
-    marginBottom: 8,
-    fontFamily: "RobotoMedium",
-    fontSize: 16,
-  },
-});
