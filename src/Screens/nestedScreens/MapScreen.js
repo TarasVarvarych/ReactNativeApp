@@ -4,8 +4,8 @@ import { useRoute } from "@react-navigation/native";
 
 export default function MapScreen() {
   const { params } = useRoute();
-  const latitude = params.item.location.coords.latitude;
-  const longitude = params.item.location.coords.longitude;
+  const latitude = params.item.location.latitude;
+  const longitude = params.item.location.longitude;
 
   return (
     <View style={styles.container}>

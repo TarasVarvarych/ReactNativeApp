@@ -19,7 +19,7 @@ export default function DefaultPostsScreen() {
 
   useEffect(() => {
     if (params) {
-      setPosts((pervState) => [...pervState, params]);
+      setPosts((prevState) => [...prevState, params]);
     }
   }, [params]);
 

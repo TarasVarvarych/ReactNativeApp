@@ -62,8 +62,7 @@ export default function CreatePostsScreen() {
     const pic = await cameraRef.takePictureAsync();
     const picLocation = await Location.getCurrentPositionAsync();
     setPicture(pic.uri);
-    setLocation(picLocation);
-    console.log(location);
+    setLocation(picLocation.coords);
   };
 
   const sendPic = () => {
