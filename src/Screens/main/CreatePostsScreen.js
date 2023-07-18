@@ -67,6 +67,10 @@ export default function CreatePostsScreen() {
   };
 
   const sendPic = () => {
+    if (picture === null || title === "" || locationName === "") {
+      console.log("Please, fill in all fields");
+      return;
+    }
     navigation.navigate("DefaultScreen", {
       picture,
       title,

@@ -29,12 +29,9 @@ export default function CommentsScreen() {
       <View style={styles.body}></View>
       <View style={styles.commentWrapper}>
         <TextInput style={styles.commentInput} placeholder="Коментувати..." />
-        <Ionicons
-          name="arrow-up-circle-sharp"
-          size={34}
-          color="#FF6C00"
-          style={styles.sendIcon}
-        />
+        <TouchableOpacity style={styles.sendIcon}>
+          <Ionicons name="arrow-up-circle-sharp" size={34} color="#FF6C00" />
+        </TouchableOpacity>
       </View>
     </View>
   );
