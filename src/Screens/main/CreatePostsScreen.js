@@ -127,7 +127,9 @@ export default function CreatePostsScreen() {
           <Text style={styles.uploadText}>Завантажте фото</Text>
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
-            style={{ marginBottom: isKeyboardShown ? 32 : 0 }}
+            style={{
+              marginBottom: isKeyboardShown && Platform.OS == "ios" ? 32 : 0,
+            }}
           >
             <TextInput
               onChangeText={setTitle}
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     paddingBottom: 34,
   },
   header: {
