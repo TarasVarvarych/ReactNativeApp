@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -76,6 +77,9 @@ export default function CreatePostsScreen() {
       locationName,
       location,
     });
+    setTitle("");
+    setLocationName("");
+    setPicture(null);
   };
 
   const deletePost = () => {

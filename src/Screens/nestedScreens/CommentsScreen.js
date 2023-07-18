@@ -4,36 +4,80 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
 } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function CommentsScreen() {
+  const [comment, setComment] = useState("");
+  const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+
   const navigation = useNavigation();
 
+  useEffect(() => {
+    if (!isKeyboardShown) {
+      Keyboard.dismiss();
+    }
+  }, [isKeyboardShown]);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("DefaultScreen");
-          }}
-        >
-          <Text>
-            <AntDesign name="arrowleft" size={24} color="#151515cc" />
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Коментарі</Text>
-      </View>
-      <View style={styles.body}></View>
-      <View style={styles.commentWrapper}>
-        <TextInput style={styles.commentInput} placeholder="Коментувати..." />
-        <TouchableOpacity style={styles.sendIcon}>
-          <Ionicons name="arrow-up-circle-sharp" size={34} color="#FF6C00" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      // keyboardVerticalOffset={100}
+    >
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setIsKeyboardShown(false);
+        }}
+      >
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("DefaultScreen");
+              }}
+            >
+              <Text>
+                <AntDesign name="arrowleft" size={24} color="#151515cc" />
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.title}>Коментарі</Text>
+          </View>
+          <View style={styles.body}></View>
+
+          <View
+            style={{
+              ...styles.commentWrapper,
+              paddingBottom: isKeyboardShown && Platform.OS == "ios" ? 90 : 0,
+            }}
+          >
+            <TextInput
+              style={styles.commentInput}
+              placeholder="Коментувати..."
+              value={comment}
+              onChangeText={setComment}
+              onFocus={() => {
+                setIsKeyboardShown(true);
+              }}
+            />
+            <TouchableOpacity style={styles.sendIcon}>
+              <Ionicons
+                name="arrow-up-circle-sharp"
+                size={34}
+                color="#FF6C00"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
