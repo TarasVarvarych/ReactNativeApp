@@ -30,7 +30,6 @@ export default function CommentsScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
-      // keyboardVerticalOffset={100}
     >
       <TouchableWithoutFeedback
         onPress={() => {
