@@ -14,9 +14,9 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
-import CameraIcon from "../../assets/images/cam.png";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
+import CameraIcon from "../../assets/images/cam.png";
 
 export default function CreatePostsScreen() {
   const navigation = useNavigation();
@@ -159,8 +159,22 @@ export default function CreatePostsScreen() {
             </View>
           </KeyboardAvoidingView>
 
-          <TouchableOpacity style={styles.publicateBtn} onPress={sendPic}>
-            <Text style={styles.publicateBtnText}>Опублікувати</Text>
+          <TouchableOpacity
+            style={{
+              ...styles.publicateBtn,
+              backgroundColor:
+                title && locationName && picture ? "#FF6C00" : "#F6F6F6",
+            }}
+            onPress={sendPic}
+          >
+            <Text
+              style={{
+                ...styles.publicateBtnText,
+                color: title && locationName && picture ? "#FFF" : "#BDBDBD",
+              }}
+            >
+              Опублікувати
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -278,8 +292,5 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     borderRadius: 8,
-    // width: "100%",
-    // borderWidth: 2,
-    // borderColor: "#fff",
   },
 });

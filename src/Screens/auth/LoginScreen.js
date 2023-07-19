@@ -11,9 +11,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { useDispatch } from "react-redux";
+
 import { useNavigation } from "@react-navigation/native";
 
 import AuthBg from "../../assets/images/authBg.jpg";
+import { logIn } from "../../../redux/auth/authOperations";
 
 export default function LoginScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
@@ -26,6 +29,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (password === "") {
@@ -45,7 +49,11 @@ export default function LoginScreen() {
   }, [isKeyboardShown]);
 
   const onLogin = () => {
-    console.log(` email: ${email}, password: ${password}`);
+    if (email === "" || password === "") {
+      return;
+    }
+    dispatch(logIn({ email, password }));
+    // console.log(` email: ${email}, password: ${password}`);
     setEmail("");
     setPassword("");
     navigation.navigate("Home");

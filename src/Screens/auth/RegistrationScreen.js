@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   Text,
@@ -16,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 
 import AuthBg from "../../assets/images/authBg.jpg";
+import { register } from "../../../redux/auth/authOperations";
 
 export default function RegistrationScreen() {
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
@@ -23,11 +25,11 @@ export default function RegistrationScreen() {
   const [loginFocused, setLoginFocused] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
-
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (password === "") {
@@ -53,11 +55,15 @@ export default function RegistrationScreen() {
   // };
 
   const onRegistration = () => {
-    console.log(`login: ${login}, email: ${email}, password: ${password}`);
+    if (login === "" || email === "" || password === "") {
+      return;
+    }
+    // console.log(`login: ${login}, email: ${email}, password: ${password}`);
     setLogin("");
     setEmail("");
     setPassword("");
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
+    dispatch(register({ login, email, password }));
   };
 
   return (
