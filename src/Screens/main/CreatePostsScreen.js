@@ -16,7 +16,6 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
-import CameraIcon from "../../assets/images/cam.png";
 
 export default function CreatePostsScreen() {
   const navigation = useNavigation();
