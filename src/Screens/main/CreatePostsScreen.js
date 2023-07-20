@@ -10,7 +10,7 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
@@ -120,8 +120,18 @@ export default function CreatePostsScreen() {
                 />
               </View>
             )}
-            <TouchableOpacity onPress={takePic}>
-              <Image style={styles.camera} source={CameraIcon} />
+            <TouchableOpacity
+              onPress={takePic}
+              style={{
+                ...styles.camera,
+                backgroundColor: picture ? "#ffffff4d" : "white",
+              }}
+            >
+              <FontAwesome
+                name="camera"
+                size={24}
+                color={picture ? "white" : "#BDBDBD"}
+              />
             </TouchableOpacity>
           </Camera>
           <Text style={styles.uploadText}>Завантажте фото</Text>
@@ -233,6 +243,12 @@ const styles = StyleSheet.create({
   camera: {
     alignSelf: "center",
     top: 90,
+    width: 60,
+    height: 60,
+    borderRadius: "50%",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
   },
   uploadText: {
     color: "#BDBDBD",
