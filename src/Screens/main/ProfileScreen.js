@@ -7,11 +7,13 @@ import {
   Image,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-
 import BgImage from "../../assets/images/authBg.jpg";
 import ProfilePic from "../../assets/images/profilePicBig.jpg";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../../redux/auth/authOperations";
 
 export default function ProfileScreen() {
+  const dispatch = useDispatch();
   return (
     <View style={styles.container}>
       <ImageBackground source={BgImage} style={styles.image}>
@@ -26,7 +28,12 @@ export default function ProfileScreen() {
           </View>
           <Text style={styles.profileName}>Natali Romanova</Text>
 
-          <TouchableOpacity style={styles.logOutBtn}>
+          <TouchableOpacity
+            style={styles.logOutBtn}
+            onPress={() => {
+              dispatch(logOut());
+            }}
+          >
             <Text>
               <Feather name="log-out" size={24} color="#BDBDBD" />
             </Text>

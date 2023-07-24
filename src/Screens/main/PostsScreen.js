@@ -11,11 +11,16 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 import ProfilePic from "../../assets/images/profilePic.jpg";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../../redux/auth/authOperations";
+// import { useSelector } from "react-redux";
 
 export default function DefaultPostsScreen() {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
   const { params } = useRoute();
+  // const { stateChange } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (params) {
@@ -29,7 +34,7 @@ export default function DefaultPostsScreen() {
         <Text style={styles.title}>Публікації</Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Login");
+            dispatch(logOut());
           }}
           style={{ marginLeft: "auto" }}
         >

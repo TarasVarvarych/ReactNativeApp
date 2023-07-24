@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
+  getAuth,
 } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { authSlice } from "./authReducer";
@@ -29,7 +30,6 @@ export const register =
       const user = auth.currentUser;
       await updateProfile(user, { displayName: login });
 
-      console.log(user);
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: user.uid,
@@ -45,10 +45,34 @@ export const logIn =
   async (dispatch, getState) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
+      console.log(user);
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: user.uid,
+          nickname: user.displayName,
+        })
+      );
       return user;
     } catch (error) {
       console.log(error.message);
     }
   };
 
-export const logOut = () => async (dispatch, getState) => {};
+export const logOut = () => async (dispatch, getState) => {
+  dispatch(authSlice.actions.logout());
+};
+
+export const authStateChangeUser = () => async (dispatch, getState) => {
+  onAuthStateChanged(auth, (user) => {
+    const auth = getAuth();
+    if (user) {
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: user.uid,
+          nickname: user.displayName,
+        })
+      );
+      dispatch(authSlice.actions.authStateChange({ stateChange: true }));
+    }
+  });
+};
