@@ -40,7 +40,7 @@ export default function CommentsScreen() {
           <View style={styles.header}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("DefaultScreen");
+                navigation.navigate("Posts");
               }}
             >
               <Text>
@@ -54,7 +54,7 @@ export default function CommentsScreen() {
           <View
             style={{
               ...styles.commentWrapper,
-              paddingBottom: isKeyboardShown && Platform.OS == "ios" ? 90 : 0,
+              paddingBottom: isKeyboardShown && Platform.OS == "ios" ? 10 : 16,
             }}
           >
             <TextInput

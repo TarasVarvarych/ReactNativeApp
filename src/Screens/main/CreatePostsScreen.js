@@ -70,7 +70,7 @@ export default function CreatePostsScreen() {
       console.log("Please, fill in all fields");
       return;
     }
-    navigation.navigate("DefaultScreen", {
+    navigation.navigate("Posts", {
       picture,
       title,
       locationName,
@@ -97,7 +97,7 @@ export default function CreatePostsScreen() {
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("DefaultScreen");
+              navigation.navigate("Posts");
             }}
           >
             <Text>
