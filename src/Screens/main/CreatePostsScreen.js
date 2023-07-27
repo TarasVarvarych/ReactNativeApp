@@ -10,34 +10,70 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 import { AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
+import { db, storage } from "../../../firebase/config";
+import { useSelector } from "react-redux";
 
 export default function CreatePostsScreen() {
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [locationName, setLocationName] = useState("");
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
-
-  // const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [picture, setPicture] = useState(null);
   const [location, setLocation] = useState(null);
+  const { userId, nickname } = useSelector((state) => state.auth);
 
-  // const [type, setType] = useState(Camera.Constants.Type.back);
+  const uploadPost = async () => {
+    const response = await fetch(picture);
+    const file = await response.blob();
+    const uniquePostId = Date.now().toString();
+    const storageRef = ref(storage, `postsImages/${uniquePostId}`);
+    await uploadBytes(storageRef, file);
+    const picRef = await getDownloadURL(storageRef);
+    await addDoc(collection(db, "posts"), {
+      picture: picRef,
+      // id: uniquePostId,
+      title,
+      locationName,
+      location,
+      userId,
+      nickname,
+    });
+  };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Camera.requestPermissionsAsync();
-  //     await MediaLibrary.requestPermissionsAsync();
+  const takePic = async () => {
+    const pic = await cameraRef.takePictureAsync();
+    const picLocation = await Location.getCurrentPositionAsync();
+    setPicture(pic.uri);
+    setLocation(picLocation.coords);
+  };
 
-  //     setHasPermission(status === "granted");
-  //   })();
-  // }, []);
+  const sendPic = () => {
+    if (picture === null || title === "" || locationName === "") {
+      console.log("Please, fill in all fields");
+      return;
+    }
+    uploadPost();
+    navigation.navigate("Posts");
+    setTitle("");
+    setLocationName("");
+    setPicture(null);
+  };
+
+  const deletePost = () => {
+    setTitle("");
+    setLocationName("");
+    setPicture(null);
+  };
 
   useEffect(() => {
     (async () => {
@@ -57,35 +93,6 @@ export default function CreatePostsScreen() {
       Keyboard.dismiss();
     }
   }, [isKeyboardShown]);
-
-  const takePic = async () => {
-    const pic = await cameraRef.takePictureAsync();
-    const picLocation = await Location.getCurrentPositionAsync();
-    setPicture(pic.uri);
-    setLocation(picLocation.coords);
-  };
-
-  const sendPic = () => {
-    if (picture === null || title === "" || locationName === "") {
-      console.log("Please, fill in all fields");
-      return;
-    }
-    navigation.navigate("Posts", {
-      picture,
-      title,
-      locationName,
-      location,
-    });
-    setTitle("");
-    setLocationName("");
-    setPicture(null);
-  };
-
-  const deletePost = () => {
-    setTitle("");
-    setLocationName("");
-    setPicture(null);
-  };
 
   return (
     <TouchableWithoutFeedback

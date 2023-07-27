@@ -7,6 +7,8 @@ import {
   Image,
   FlatList,
 } from "react-native";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../firebase/config";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
@@ -18,15 +20,25 @@ import { logOut } from "../../../redux/auth/authOperations";
 export default function DefaultPostsScreen() {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
-  const { params } = useRoute();
+  // const { params } = useRoute();
   // const { stateChange } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (params) {
-      setPosts((prevState) => [...prevState, params]);
+  const getDataFromFirestore = async () => {
+    try {
+      const posts = [];
+      const snapshot = await getDocs(collection(db, "posts"));
+      snapshot.forEach((doc) => posts.push(doc.data()));
+      setPosts(posts);
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-  }, [params]);
+  };
+
+  useEffect(() => {
+    getDataFromFirestore();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -106,17 +118,6 @@ export default function DefaultPostsScreen() {
                   >
                     {item.locationName}
                   </Text>
-                  {/* <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#212121",
-                      marginLeft: 6,
-                      textDecorationLine: "underline",
-                    }}
-                  >
-                    {item.location.coords.latitude},
-                    {item.location.coords.longtitude}
-                  </Text> */}
                 </TouchableOpacity>
               </View>
             </View>
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   body: {
-    width: "100%",
+    minWidth: "100%",
     paddingTop: 32,
     paddingHorizontal: 16,
   },
@@ -174,13 +175,15 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   postPic: {
-    width: 343,
+    // width: 343,
+    // width: 400,
+
     height: 240,
     borderRadius: 8,
     marginBottom: 8,
   },
   postWrapper: {
-    width: 343,
+    // width: 343,
     marginBottom: 34,
   },
   postTitle: {
