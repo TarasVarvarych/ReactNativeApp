@@ -14,7 +14,14 @@ import {
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import { useSelector } from "react-redux";
 
@@ -33,12 +40,14 @@ export default function CommentsScreen() {
     addDoc(collection(db, `posts/${postId}/comments`), {
       comment,
       nickname,
+      postId,
     });
     setComment("");
   };
 
   const getComments = async () => {
     const commentsRef = collection(db, `posts/${postId}/comments`);
+    const q = query(commentsRef, where("postId", "==", postId));
     onSnapshot(commentsRef, (snapshot) => {
       const allComments = [];
       snapshot.forEach((doc) =>
@@ -50,7 +59,7 @@ export default function CommentsScreen() {
 
   useEffect(() => {
     getComments();
-  }, []);
+  }, [postId]);
 
   useEffect(() => {
     if (!isKeyboardShown) {

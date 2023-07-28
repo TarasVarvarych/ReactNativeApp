@@ -7,25 +7,34 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+  doc,
+} from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
 import ProfilePic from "../../assets/images/profilePic.jpg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../../redux/auth/authOperations";
 // import { useSelector } from "react-redux";
 
 export default function DefaultPostsScreen() {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
+  const { userId } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
   const getDataFromFirestore = async () => {
     const postsRef = collection(db, `posts`);
-    onSnapshot(postsRef, (snapshot) => {
+    const q = query(postsRef, where("userId", "==", userId));
+    onSnapshot(q, (snapshot) => {
       const allPosts = [];
       snapshot.forEach((doc) => allPosts.push({ ...doc.data(), id: doc.id }));
       setPosts(allPosts);

@@ -7,12 +7,12 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
 
 import { Feather } from "@expo/vector-icons";
 import BgImage from "../../assets/images/authBg.jpg";
 import ProfilePic from "../../assets/images/profilePicBig.jpg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../../redux/auth/authOperations";
 import { useEffect, useState } from "react";
 import { db } from "../../../firebase/config";
@@ -20,22 +20,24 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
   const [posts, setPosts] = useState([]);
+  const { userId } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const getDataFromFirestore = async () => {
-    // try {
-    //   const posts = [];
-    //   const snapshot = await getDocs(collection(db, "posts"));
-    //   snapshot.forEach((doc) => posts.push({ ...doc.data(), id: doc.id }));
-    //   setPosts(posts);
-    // } catch (error) {
-    //   console.log(error);
-    //   throw error;
-    // }
+  // const getDataFromFirestore = async () => {
+  //   const allPosts = [];
+  //   const postsRef = collection(db, "posts");
+  //   const q = query(postsRef, where("userId", "==", userId));
+  //   onSnapshot(q, (snapshot) => {
+  //     snapshot.forEach((doc) => allPosts.push({ ...doc.data(), id: doc.id }));
+  //   });
+  //   setPosts(allPosts);
+  // };
 
+  const getDataFromFirestore = async () => {
     const postsRef = collection(db, `posts`);
-    onSnapshot(postsRef, (snapshot) => {
+    const q = query(postsRef, where("userId", "==", userId));
+    onSnapshot(q, (snapshot) => {
       const allPosts = [];
       snapshot.forEach((doc) => allPosts.push({ ...doc.data(), id: doc.id }));
       setPosts(allPosts);
@@ -44,7 +46,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     getDataFromFirestore();
-  }, []);
+  }, [userId]);
   return (
     <ImageBackground source={BgImage} style={styles.image}>
       <View style={styles.container}>
