@@ -41,7 +41,6 @@ export default function CreatePostsScreen() {
     const picRef = await getDownloadURL(storageRef);
     await addDoc(collection(db, "posts"), {
       picture: picRef,
-      // id: uniquePostId,
       title,
       locationName,
       location,

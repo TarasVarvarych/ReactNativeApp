@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
@@ -20,26 +20,21 @@ import { logOut } from "../../../redux/auth/authOperations";
 export default function DefaultPostsScreen() {
   const [posts, setPosts] = useState([]);
   const navigation = useNavigation();
-  // const { params } = useRoute();
-  // const { stateChange } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
 
   const getDataFromFirestore = async () => {
-    try {
-      const posts = [];
-      const snapshot = await getDocs(collection(db, "posts"));
-      snapshot.forEach((doc) => posts.push(doc.data()));
-      setPosts(posts);
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    const postsRef = collection(db, `posts`);
+    onSnapshot(postsRef, (snapshot) => {
+      const allPosts = [];
+      snapshot.forEach((doc) => allPosts.push({ ...doc.data(), id: doc.id }));
+      setPosts(allPosts);
+    });
   };
 
   useEffect(() => {
     getDataFromFirestore();
   }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -89,7 +84,10 @@ export default function DefaultPostsScreen() {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate("Comments");
+                    navigation.navigate("Comments", {
+                      postId: item.id,
+                      picture: item.picture,
+                    });
                   }}
                   style={{ flexDirection: "row", alignItems: "center" }}
                 >

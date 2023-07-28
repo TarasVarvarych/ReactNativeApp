@@ -8,17 +8,49 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  FlatList,
+  Image,
 } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { db } from "../../../firebase/config";
+import { useSelector } from "react-redux";
 
 export default function CommentsScreen() {
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const [isKeyboardShown, setIsKeyboardShown] = useState(false);
-
+  const { nickname } = useSelector((state) => state.auth);
   const navigation = useNavigation();
+  const { params } = useRoute();
+  const { postId, picture } = params;
+  const createComment = async () => {
+    if (comment.trim() === "") {
+      return;
+    }
+    addDoc(collection(db, `posts/${postId}/comments`), {
+      comment,
+      nickname,
+    });
+    setComment("");
+  };
+
+  const getComments = async () => {
+    const commentsRef = collection(db, `posts/${postId}/comments`);
+    onSnapshot(commentsRef, (snapshot) => {
+      const allComments = [];
+      snapshot.forEach((doc) =>
+        allComments.push({ ...doc.data(), id: doc.id })
+      );
+      setComments(allComments);
+    });
+  };
+
+  useEffect(() => {
+    getComments();
+  }, []);
 
   useEffect(() => {
     if (!isKeyboardShown) {
@@ -49,7 +81,23 @@ export default function CommentsScreen() {
             </TouchableOpacity>
             <Text style={styles.title}>Коментарі</Text>
           </View>
-          <View style={styles.body}></View>
+
+          <View style={styles.body}>
+            <Image source={{ uri: picture }} style={styles.postPic} />
+            <FlatList
+              style={{ width: "100%" }}
+              data={comments}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity>
+                  <View style={styles.comment}>
+                    <Text>{item.comment}</Text>
+                    {/* <Text>{item.nickname}</Text> */}
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
 
           <View
             style={{
@@ -71,6 +119,7 @@ export default function CommentsScreen() {
                 name="arrow-up-circle-sharp"
                 size={34}
                 color="#FF6C00"
+                onPress={createComment}
               />
             </TouchableOpacity>
           </View>
@@ -84,8 +133,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "space-between",
+    // alignItems: "center",
+    // justifyContent: "space-between",
+  },
+  body: {
+    flex: 1,
+    width: "100%",
+    // maxHeight: "80%",
+    paddingTop: 32,
+    paddingHorizontal: 16,
   },
   header: {
     flexDirection: "row",
@@ -124,5 +180,23 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     right: 24,
+  },
+  postPic: {
+    width: "100%",
+    height: 240,
+    borderRadius: 8,
+    marginBottom: 32,
+  },
+  comment: {
+    backgroundColor: "#F6F6F6",
+    width: 299,
+    borderRadius: 6,
+    borderTopLeftRadius: 0,
+    padding: 16,
+    fontFamily: "Roboto",
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#212121",
+    marginBottom: 24,
   },
 });

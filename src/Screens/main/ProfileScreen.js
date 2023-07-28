@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 
 import { Feather } from "@expo/vector-icons";
 import BgImage from "../../assets/images/authBg.jpg";
@@ -24,17 +24,22 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
 
   const getDataFromFirestore = async () => {
-    try {
-      const posts = [];
-      const snapshot = await getDocs(collection(db, "posts"));
-      snapshot.forEach((doc) => posts.push(doc.data()));
-      setPosts(posts);
-      // console.log(snapshot);
-      // return snapshot.map((doc) => ({ id: doc.id, data: doc.data() }));
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+    // try {
+    //   const posts = [];
+    //   const snapshot = await getDocs(collection(db, "posts"));
+    //   snapshot.forEach((doc) => posts.push({ ...doc.data(), id: doc.id }));
+    //   setPosts(posts);
+    // } catch (error) {
+    //   console.log(error);
+    //   throw error;
+    // }
+
+    const postsRef = collection(db, `posts`);
+    onSnapshot(postsRef, (snapshot) => {
+      const allPosts = [];
+      snapshot.forEach((doc) => allPosts.push({ ...doc.data(), id: doc.id }));
+      setPosts(allPosts);
+    });
   };
 
   useEffect(() => {
@@ -90,7 +95,10 @@ export default function ProfileScreen() {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("Comments");
+                      navigation.navigate("Comments", {
+                        postId: item.id,
+                        picture: item.picture,
+                      });
                     }}
                     style={{ flexDirection: "row", alignItems: "center" }}
                   >
