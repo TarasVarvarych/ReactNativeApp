@@ -39,15 +39,12 @@ export default function CommentsScreen() {
       return;
     }
 
-    // Отримуємо поточну дату
     const currentDate = new Date();
 
-    // Функція для перетворення числа в двозначний формат
     function twoDigitsFormat(num) {
       return num < 10 ? "0" + num : num;
     }
 
-    // Об'єкт для збереження назв місяців
     const months = {
       0: "січня",
       1: "лютого",
@@ -63,7 +60,6 @@ export default function CommentsScreen() {
       11: "грудня",
     };
 
-    // Форматуємо дату у вказаний формат
     const formattedDate = `
   ${twoDigitsFormat(currentDate.getDate())} ${
       months[currentDate.getMonth()]
