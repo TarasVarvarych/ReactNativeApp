@@ -45,7 +45,6 @@ export const logIn =
   async (dispatch, getState) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      console.log(user);
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: user.uid,

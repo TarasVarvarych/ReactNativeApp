@@ -24,6 +24,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../firebase/config";
 import { useSelector } from "react-redux";
+import profilePic from "../../assets/images/ProfilePicSmall.jpg";
 
 export default function CommentsScreen() {
   const [comment, setComment] = useState("");
@@ -37,10 +38,45 @@ export default function CommentsScreen() {
     if (comment.trim() === "") {
       return;
     }
+
+    // Отримуємо поточну дату
+    const currentDate = new Date();
+
+    // Функція для перетворення числа в двозначний формат
+    function twoDigitsFormat(num) {
+      return num < 10 ? "0" + num : num;
+    }
+
+    // Об'єкт для збереження назв місяців
+    const months = {
+      0: "січня",
+      1: "лютого",
+      2: "березня",
+      3: "квітня",
+      4: "травня",
+      5: "червня",
+      6: "липня",
+      7: "серпня",
+      8: "вересня",
+      9: "жовтня",
+      10: "листопада",
+      11: "грудня",
+    };
+
+    // Форматуємо дату у вказаний формат
+    const formattedDate = `
+  ${twoDigitsFormat(currentDate.getDate())} ${
+      months[currentDate.getMonth()]
+    }, ${currentDate.getFullYear()} | ${twoDigitsFormat(
+      currentDate.getHours()
+    )}:${twoDigitsFormat(currentDate.getMinutes())}
+`;
+
     addDoc(collection(db, `posts/${postId}/comments`), {
       comment,
       nickname,
       postId,
+      createdAt: formattedDate,
     });
     setComment("");
   };
@@ -98,11 +134,20 @@ export default function CommentsScreen() {
               data={comments}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity>
+                <TouchableOpacity style={styles.commentWrapper}>
                   <View style={styles.comment}>
                     <Text>{item.comment}</Text>
-                    {/* <Text>{item.nickname}</Text> */}
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        color: "#BDBDBD",
+                        alignSelf: "flex-end",
+                      }}
+                    >
+                      {item.createdAt}
+                    </Text>
                   </View>
+                  <Image source={profilePic} />
                 </TouchableOpacity>
               )}
             />
@@ -110,7 +155,7 @@ export default function CommentsScreen() {
 
           <View
             style={{
-              ...styles.commentWrapper,
+              ...styles.commentInputWrapper,
               paddingBottom: isKeyboardShown && Platform.OS == "ios" ? 10 : 16,
             }}
           >
@@ -142,13 +187,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "space-between",
   },
   body: {
     flex: 1,
     width: "100%",
-    // maxHeight: "80%",
     paddingTop: 32,
     paddingHorizontal: 16,
   },
@@ -181,7 +223,7 @@ const styles = StyleSheet.create({
     padding: 16,
     fontSize: 16,
   },
-  commentWrapper: {
+  commentInputWrapper: {
     width: "100%",
     paddingHorizontal: 16,
   },
@@ -196,6 +238,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 32,
   },
+  commentWrapper: {
+    flexDirection: "row",
+    width: "100%",
+    marginBottom: 24,
+    alignSelf: "flex-end",
+    gap: 16,
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+  },
   comment: {
     backgroundColor: "#F6F6F6",
     width: 299,
@@ -207,5 +258,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: "#212121",
     marginBottom: 24,
+    alignSelf: "flex-end",
   },
 });

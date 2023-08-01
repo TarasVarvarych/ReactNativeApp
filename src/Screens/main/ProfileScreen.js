@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import { collection, onSnapshot, query, where, doc } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 import { Feather } from "@expo/vector-icons";
 import BgImage from "../../assets/images/authBg.jpg";
@@ -24,16 +24,6 @@ export default function ProfileScreen() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  // const getDataFromFirestore = async () => {
-  //   const allPosts = [];
-  //   const postsRef = collection(db, "posts");
-  //   const q = query(postsRef, where("userId", "==", userId));
-  //   onSnapshot(q, (snapshot) => {
-  //     snapshot.forEach((doc) => allPosts.push({ ...doc.data(), id: doc.id }));
-  //   });
-  //   setPosts(allPosts);
-  // };
-
   const getDataFromFirestore = async () => {
     const postsRef = collection(db, `posts`);
     const q = query(postsRef, where("userId", "==", userId));
@@ -43,10 +33,10 @@ export default function ProfileScreen() {
       setPosts(allPosts);
     });
   };
-
   useEffect(() => {
     getDataFromFirestore();
   }, [userId]);
+
   return (
     <ImageBackground source={BgImage} style={styles.image}>
       <View style={styles.container}>
@@ -95,22 +85,53 @@ export default function ProfileScreen() {
                     flexDirection: "row",
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("Comments", {
-                        postId: item.id,
-                        picture: item.picture,
-                      });
-                    }}
-                    style={{ flexDirection: "row", alignItems: "center" }}
+                  <View
+                    style={{ display: "flex", flexDirection: "row", gap: 24 }}
                   >
-                    <Feather name="message-circle" size={24} color="#BDBDBD" />
-                    <Text
-                      style={{ fontSize: 16, color: "#BDBDBD", marginLeft: 6 }}
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("Comments", {
+                          postId: item.id,
+                          picture: item.picture,
+                        });
+                      }}
+                      style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      0
-                    </Text>
-                  </TouchableOpacity>
+                      <Feather
+                        name="message-circle"
+                        size={24}
+                        color="#FF6C00"
+                      />
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: "#212121",
+                          marginLeft: 6,
+                        }}
+                      >
+                        0
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 6,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Feather name="thumbs-up" size={24} color="#FF6C00" />
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: "#212121",
+                          marginLeft: 6,
+                        }}
+                      >
+                        0
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
 
                   <TouchableOpacity
                     onPress={() => {
